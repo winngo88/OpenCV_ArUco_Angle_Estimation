@@ -20,10 +20,13 @@ def detect_ArUco(img):
 
     Detected_ArUco_markers = {}
     ## enter your code here ##
-    aruco_dict = aruco.Dictionary_get(aruco.DICT_5X5_250)
+    aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_5X5_250)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    parameters = aruco.DetectorParameters_create()
-    corners, ids, _ = aruco.detectMarkers(gray , aruco_dict, parameters = parameters)
+    parameters = aruco.DetectorParameters()
+    detector = aruco.ArucoDetector(aruco_dict, parameters)
+    corners, ids, rejectedCandidates  = detector.detectMarkers(gray)
+    if not corners:
+        return Detected_ArUco_markers
     for i in range(len(ids)):
         Detected_ArUco_markers.update({ids[i][0]: corners[i]})
     return Detected_ArUco_markers
